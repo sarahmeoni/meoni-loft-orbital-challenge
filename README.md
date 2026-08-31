@@ -1,1 +1,0 @@
-# meoni-loft-challenge

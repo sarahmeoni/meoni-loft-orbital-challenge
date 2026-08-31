@@ -1,0 +1,25 @@
+{
+  "location": {
+    "name": "Loft Lab",
+    "latitude": 39.726652823169395,
+    "longitude": -105.20649511898365
+  },
+  "tracking": {
+    "backend": "satellites_fly",
+    "api_base_url": "https://satellites.fly.dev",
+    "poll_interval_seconds": 10,
+    "request_timeout_seconds": 10,
+    "passes_lookahead_days": 1,
+    "refresh_interval_seconds": 3600,
+    "min_culmination_degrees": 0
+  },
+  "satellites": [
+    {"norad_id": 25544, "name": "ISS (ZARYA)", "color": "blue"},
+    {"norad_id": 48915, "name": "Example Sat", "color": "pink"}
+  ],
+  "outputs": [
+    {"type": "stdout"},
+    {"type": "file", "path": "commands.log", "append": true},
+    {"type": "tcp", "host": "127.0.0.1", "port": 9000}
+  ]
+}

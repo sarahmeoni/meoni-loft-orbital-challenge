@@ -1,0 +1,10 @@
+# Development dependencies for satellite-lighting.
+# Includes runtime deps plus linting, type checking and test tooling.
+# To generate requirements-dev.txt, run ./run-pip-compile.sh
+-r requirements.in
+
+mypy
+ruff
+pytest
+requests-mock
+types-requests

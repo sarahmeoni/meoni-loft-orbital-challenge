@@ -1,0 +1,3 @@
+# Runtime dependencies for satellite-lighting.
+# To generate requirements.txt, run ./run-pip-compile.sh
+requests
