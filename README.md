@@ -65,5 +65,7 @@ pytest
 ```
 
 ## AI Usage
-I used AI (Augment) to generate util functions to help validate/parse objects needed in this project.
-Augment also helped in creating tests as well as debugging code.
+I used AI (Augment) to transform my util functions that validate/parse 
+objects needed in this project into pydantic validation.
+Augment also helped in creating tests, debugging code, and setting up the 
+main and service files.
