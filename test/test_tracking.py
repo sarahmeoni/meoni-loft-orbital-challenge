@@ -54,45 +54,52 @@ def _tracker(config, satellites):
 
 def test_overhead_when_now_inside_window(requests_mock):
     requests_mock.get(f"{BASE}/passes/25544", json=[_pass(100, 200)])
-    tracker = _tracker(_config(), [Satellite(25544, "blue")])
+    tracker = _tracker(_config(), [Satellite(norad_id=25544, color="blue")])
     assert tracker.satellites_overhead(_at(150)) == {25544}
 
 
 def test_not_overhead_outside_window(requests_mock):
     requests_mock.get(f"{BASE}/passes/25544", json=[_pass(100, 200)])
-    tracker = _tracker(_config(), [Satellite(25544, "blue")])
+    tracker = _tracker(_config(), [Satellite(norad_id=25544, color="blue")])
     assert tracker.satellites_overhead(_at(300)) == set()
 
 
 def test_low_culmination_pass_filtered_out(requests_mock):
     requests_mock.get(f"{BASE}/passes/25544", json=[_pass(100, 200, alt=5.0)])
-    tracker = _tracker(_config(min_culmination_degrees=10.0), [Satellite(25544, "blue")])
+    tracker = _tracker(
+        _config(min_culmination_degrees=10.0), [Satellite(norad_id=25544, color="blue")]
+    )
     assert tracker.satellites_overhead(_at(150)) == set()
 
 
 def test_multiple_satellites_reported_together(requests_mock):
     requests_mock.get(f"{BASE}/passes/25544", json=[_pass(100, 200)])
     requests_mock.get(f"{BASE}/passes/48915", json=[_pass(100, 200)])
-    tracker = _tracker(_config(), [Satellite(25544, "blue"), Satellite(48915, "pink")])
+    tracker = _tracker(
+        _config(),
+        [Satellite(norad_id=25544, color="blue"), Satellite(norad_id=48915, color="pink")],
+    )
     assert tracker.satellites_overhead(_at(150)) == {25544, 48915}
 
 
 def test_server_error_is_graceful(requests_mock):
     # A 500 must be swallowed (logged) and never crash the poll.
     requests_mock.get(f"{BASE}/passes/25544", status_code=500)
-    tracker = _tracker(_config(), [Satellite(25544, "blue")])
+    tracker = _tracker(_config(), [Satellite(norad_id=25544, color="blue")])
     assert tracker.satellites_overhead(_at(150)) == set()
 
 
 def test_non_list_payload_is_graceful(requests_mock):
     requests_mock.get(f"{BASE}/passes/25544", json={"unexpected": "shape"})
-    tracker = _tracker(_config(), [Satellite(25544, "blue")])
+    tracker = _tracker(_config(), [Satellite(norad_id=25544, color="blue")])
     assert tracker.satellites_overhead(_at(150)) == set()
 
 
 def test_windows_cached_within_refresh_interval(requests_mock):
     matcher = requests_mock.get(f"{BASE}/passes/25544", json=[_pass(100, 100000)])
-    tracker = _tracker(_config(refresh_interval_seconds=3600), [Satellite(25544, "blue")])
+    tracker = _tracker(
+        _config(refresh_interval_seconds=3600), [Satellite(norad_id=25544, color="blue")]
+    )
     tracker.satellites_overhead(_at(150))
     tracker.satellites_overhead(_at(160))
     # Second poll within the interval reuses the cache -> only one HTTP call.
@@ -101,7 +108,9 @@ def test_windows_cached_within_refresh_interval(requests_mock):
 
 def test_cache_refreshes_when_exhausted(requests_mock):
     matcher = requests_mock.get(f"{BASE}/passes/25544", json=[_pass(100, 200)])
-    tracker = _tracker(_config(refresh_interval_seconds=3600), [Satellite(25544, "blue")])
+    tracker = _tracker(
+        _config(refresh_interval_seconds=3600), [Satellite(norad_id=25544, color="blue")]
+    )
     tracker.satellites_overhead(_at(150))
     # All windows are now in the past -> exhaustion forces a refetch.
     tracker.satellites_overhead(_at(500))

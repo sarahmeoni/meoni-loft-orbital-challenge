@@ -17,15 +17,14 @@ from service import LightingService
 from tracking.base import SatelliteTracker
 from utils.errors import TrackingError
 
-SATS = [Satellite(25544, "blue"), Satellite(48915, "pink")]
+SATS = [Satellite(norad_id=25544, color="blue"), Satellite(norad_id=48915, color="pink")]
 
 
 def _config(satellites=SATS):
     return AppConfig(
-        location=Location(1.0, 2.0),
-        tracking=TrackingConfig("satellites_fly", "https://x", 10, 10, 1, 3600, 0.0),
+        location=Location(latitude=1.0, longitude=2.0),
+        tracking=TrackingConfig(),
         satellites=tuple(satellites),
-        outputs=(),
     )
 
 

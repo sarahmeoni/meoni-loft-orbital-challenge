@@ -3,12 +3,12 @@
 A small Python (>= 3.12) service that turns office lighting into a live satellite
 tracker. It watches a configured location, and whenever one of the satellites you
 care about is passing overhead it emits a lighting command for each satellite and 
-the corresponding color
+the corresponding color.
 
 ## Command format
 
 When one or more satellites are overhead, the service emits one line listing each
-overhead satellite (in config order) and its colour:
+overhead satellite (in config order) and its color:
 
 ```
 25544: blue, 48915: pink

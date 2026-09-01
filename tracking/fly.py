@@ -42,11 +42,11 @@ class FlyDevTracker(SatelliteTracker):
     def satellites_overhead(self, now: datetime) -> set[int]:
         self._refresh_if_needed(now)
         now_ts = int(now.timestamp())
-        overhead: set[int] = set()
-        for sat in self._satellites:
-            if any(rise <= now_ts <= fall for rise, fall in self._windows.get(sat.norad_id, ())):
-                overhead.add(sat.norad_id)
-        return overhead
+        return {
+            sat.norad_id
+            for sat in self._satellites
+            if any(rise <= now_ts <= fall for rise, fall in self._windows.get(sat.norad_id, ()))
+        }
 
     def _refresh_if_needed(self, now: datetime) -> None:
         stale = self._last_refresh is None or (

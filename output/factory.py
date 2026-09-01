@@ -3,13 +3,17 @@
 #
 
 from models.app_config import AppConfig
-from models.output_config import OutputConfig
+from models.output_config import (
+    FileOutputConfig,
+    OutputConfig,
+    StdoutOutputConfig,
+    TcpOutputConfig,
+)
 from output.base import Output
 from output.file import FileOutput
 from output.multi import MultiOutput
 from output.stdout import StdoutOutput
 from output.tcp import TcpOutput
-from utils.const import Constants
 from utils.errors import ConfigError
 
 
@@ -18,18 +22,14 @@ def build_output(config: AppConfig) -> Output:
 
 
 def _build_one(item: OutputConfig, config: AppConfig) -> Output:
-    if item.type == Constants.output_stdout:
+    if isinstance(item, StdoutOutputConfig):
         return StdoutOutput()
-    if item.type == Constants.output_file:
-        if item.path is None:
-            raise ConfigError("file output requires 'path'.")
+    if isinstance(item, FileOutputConfig):
         return FileOutput(path=item.path, append=item.append)
-    if item.type == Constants.output_tcp:
-        if item.host is None or item.port is None:
-            raise ConfigError("tcp output requires 'host' and 'port'.")
+    if isinstance(item, TcpOutputConfig):
         return TcpOutput(
             host=item.host,
             port=item.port,
             timeout=config.tracking.request_timeout_seconds,
         )
-    raise ConfigError(f"Unsupported output type '{item.type}'.")
+    raise ConfigError(f"Unsupported output type '{item!r}'.")

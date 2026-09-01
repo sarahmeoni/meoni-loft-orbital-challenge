@@ -6,16 +6,18 @@
 
 import pytest
 
+from pydantic import ValidationError
+
 from models.app_config import AppConfig
 from models.location import Location
-from models.output_config import OutputConfig
+from models.output_config import FileOutputConfig, StdoutOutputConfig
+from models.satellite import Satellite
 from models.tracking_config import TrackingConfig
 from output.base import Output
 from output.factory import build_output
 from output.file import FileOutput
 from output.multi import MultiOutput
 from output.tcp import TcpOutput
-from utils.errors import ConfigError
 
 
 class RecordingOutput(Output):
@@ -37,9 +39,9 @@ class FailingOutput(Output):
 
 def _app_config(outputs):
     return AppConfig(
-        location=Location(1.0, 2.0),
-        tracking=TrackingConfig("satellites_fly", "https://x", 10, 10, 1, 3600, 0.0),
-        satellites=(),
+        location=Location(latitude=1.0, longitude=2.0),
+        tracking=TrackingConfig(),
+        satellites=(Satellite(norad_id=1, color="blue"),),
         outputs=tuple(outputs),
     )
 
@@ -91,15 +93,11 @@ def test_tcp_send_is_graceful_without_listener():
 
 
 def test_build_output_returns_multi():
-    out = build_output(_app_config([OutputConfig(type="stdout")]))
+    out = build_output(_app_config([StdoutOutputConfig()]))
     assert isinstance(out, MultiOutput)
 
 
-def test_build_output_file_requires_path():
-    with pytest.raises(ConfigError):
-        build_output(_app_config([OutputConfig(type="file", path=None)]))
-
-
-def test_build_output_rejects_unknown_type():
-    with pytest.raises(ConfigError):
-        build_output(_app_config([OutputConfig(type="mystery")]))
+def test_file_output_config_requires_path():
+    # A file output with no path is now rejected at model construction.
+    with pytest.raises(ValidationError):
+        FileOutputConfig()
