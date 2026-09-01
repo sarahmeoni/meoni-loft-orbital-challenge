@@ -12,8 +12,6 @@ from models.tracking_config import TrackingConfig
 
 @dataclass(frozen=True, slots=True)
 class AppConfig:
-    """Fully validated application configuration."""
-
     location: Location
     tracking: TrackingConfig
     satellites: tuple[Satellite, ...]

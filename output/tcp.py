@@ -11,11 +11,6 @@ logger = logging.getLogger(__name__)
 
 
 class TcpOutput(Output):
-    """Send commands over a TCP connection, reconnecting on failure.
-
-    The socket is opened lazily and re-opened on the next send after any
-    error, so a listener that comes and goes never crashes the service.
-    """
 
     def __init__(self, host: str, port: int, timeout: float = 10.0) -> None:
         self._host = host

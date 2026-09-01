@@ -6,7 +6,6 @@ from output.base import Output
 
 
 class FileOutput(Output):
-    """Append (or overwrite) commands to a file, one per line."""
 
     def __init__(self, path: str, append: bool = True) -> None:
         self._handle = open(path, "a" if append else "w", encoding="utf-8")

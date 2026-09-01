@@ -6,11 +6,7 @@ from abc import ABC, abstractmethod
 
 
 class Output(ABC):
-    """A destination that receives formatted lighting commands.
-
-    The service only calls ``send`` (and ``close`` on shutdown), so every
-    sink type is interchangeable and selectable via configuration.
-    """
+    # A destination that receives formatted lighting commands.
 
     @abstractmethod
     def send(self, command: str) -> None:

@@ -14,7 +14,6 @@ from utils.errors import ConfigError
 def build_tracker(
     config: AppConfig, session: requests.Session | None = None
 ) -> SatelliteTracker:
-    """Build the tracker selected by ``config.tracking.backend``."""
     backend = config.tracking.backend
     if backend == Constants.backend_satellites_fly:
         return FlyDevTracker(

@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class MultiOutput(Output):
-    """Fan a single command out to several outputs simultaneously."""
 
     def __init__(self, outputs: tuple[Output, ...]) -> None:
         self._outputs = outputs

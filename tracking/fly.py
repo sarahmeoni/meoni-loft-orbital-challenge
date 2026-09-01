@@ -20,12 +20,10 @@ Window = tuple[int, int]
 
 
 class FlyDevTracker(SatelliteTracker):
-    """Tracker uses satellites.fly.dev to predict passes.
-
-    Pass windows are fetched once per satellite and cached; each call then
-    only compares ``now`` against the cached windows. The cache is refreshed
-    when it expires (default is 1 hour) or when every window has moved into the past.
-    """
+    # Uses satellites.fly.dev to predict passes.
+    # Pass windows are fetched once per satellite and cached; each call then
+    # only compares ``now`` against the cached windows. The cache is refreshed
+    # when it expires (default is 1 hour) or when every window has moved into the past.
 
     def __init__(
         self,

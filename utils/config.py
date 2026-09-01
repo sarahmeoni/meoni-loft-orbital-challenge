@@ -16,7 +16,6 @@ from utils.errors import ConfigError
 
 
 def load_config(path: str | Path) -> AppConfig:
-    """Read, validate and return the application configuration at ``path``."""
     raw = _read_json(Path(path))
     if not isinstance(raw, dict):
         raise ConfigError("Top-level config must be a JSON object.")
@@ -24,7 +23,7 @@ def load_config(path: str | Path) -> AppConfig:
         location=_parse_location(_require_key(raw, "location", dict)),
         tracking=_parse_tracking(raw.get("tracking", {})),
         satellites=_parse_satellites(_require_key(raw, "satellites", list)),
-        outputs=_parse_outputs(_require_key(raw, "outputs", list)),
+        outputs=_parse_outputs(raw.get("outputs")),
     )
 
 
@@ -37,6 +36,7 @@ def _read_json(path: Path) -> Any:
     except json.JSONDecodeError as exc:
         raise ConfigError(f"Config file is not valid JSON: {exc}") from exc
 
+# PARSING METHODS
 
 def _parse_location(data: dict[str, Any]) -> Location:
     lat = _require_number(data, "latitude", "location")
@@ -96,7 +96,11 @@ def _parse_satellites(items: list[Any]) -> tuple[Satellite, ...]:
     return tuple(satellites)
 
 
-def _parse_outputs(items: list[Any]) -> tuple[OutputConfig, ...]:
+def _parse_outputs(items: Any) -> tuple[OutputConfig, ...]:
+    if items is None:
+        return (OutputConfig(type=Constants.output_stdout),)
+    if not isinstance(items, list):
+        raise ConfigError("'outputs' must be a list.")
     if not items:
         raise ConfigError("'outputs' must contain at least one output.")
     outputs: list[OutputConfig] = []
@@ -130,6 +134,7 @@ def _parse_outputs(items: list[Any]) -> tuple[OutputConfig, ...]:
             outputs.append(OutputConfig(type=out_type))
     return tuple(outputs)
 
+# VALIDATION METHODS
 
 def _require_key(data: dict[str, Any], key: str, expected: type) -> Any:
     if key not in data:

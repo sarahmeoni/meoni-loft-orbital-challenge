@@ -44,6 +44,14 @@ def test_missing_required_key_raises(tmp_path):
         load_config(_write(tmp_path, data))
 
 
+def test_outputs_optional_defaults_to_stdout(tmp_path):
+    data = _valid()
+    del data["outputs"]
+    cfg = load_config(_write(tmp_path, data))
+    assert len(cfg.outputs) == 1
+    assert cfg.outputs[0].type == "stdout"
+
+
 def test_latitude_out_of_range_raises(tmp_path):
     data = _valid()
     data["location"]["latitude"] = 200.0

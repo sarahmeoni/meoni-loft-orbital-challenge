@@ -4,13 +4,13 @@
 
 
 class Constants:
-    """Default values and fixed strings for the satellite-lighting service."""
+    # Default values and fixed strings for the satellite-lighting service.
 
     # Supported tracking backends
     backend_satellites_fly = "satellites_fly"
     supported_backends = (backend_satellites_fly,)
 
-    # Tracking defaults (used when a field is omitted from the config)
+    # Tracking defaults
     default_backend = backend_satellites_fly
     default_api_base_url = "https://satellites.fly.dev"
     default_poll_interval_seconds = 10
@@ -32,7 +32,7 @@ class Constants:
     command_kv_separator = ": "
     command_pair_separator = ", "
 
-    # Coordinate bounds (decimal degrees)
+    # Coordinate ranges
     min_latitude = -90.0
     max_latitude = 90.0
     min_longitude = -180.0

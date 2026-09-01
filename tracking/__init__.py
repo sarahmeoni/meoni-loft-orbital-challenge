@@ -1,5 +1,5 @@
 #
 # tracking
 #
-# Satellite-tracking backends that answer "which satellites are overhead now?".
+# Satellite-tracking backends - which satellites are overhead now?
 #

@@ -25,10 +25,10 @@ once and cached. The cache refreshes hourly or when its windows run out.
 
 ## Configuration
 
-A single JSON file (see `config.example.json`). `location`, `satellites` and
-`outputs` are required; the `tracking` block is optional (sensible defaults are used
-if omitted). Output types are `stdout`, `file` (needs `path`) and `tcp` (needs `host`
-and `port`).
+A single JSON file (see `config.example.json`). `location` and `satellites` are
+required; `outputs` and `tracking` are optional. If `outputs` is omitted it defaults
+to a single `stdout` sink. Output types are `stdout`, `file` (needs `path`) and `tcp`
+(needs `host` and `port`).
 
 ```json
 {
@@ -36,11 +36,6 @@ and `port`).
   "satellites": [
     {"norad_id": 25544, "color": "blue"},
     {"norad_id": 48915, "color": "pink"}
-  ],
-  "outputs": [
-    {"type": "stdout"},
-    {"type": "file", "path": "commands.log"},
-    {"type": "tcp", "host": "127.0.0.1", "port": 9000}
   ]
 }
 ```
@@ -68,3 +63,7 @@ docker run --rm -v "$PWD/config.example.json:/app/config.json:ro" satellite-ligh
 pip install -r requirements-dev.txt
 pytest
 ```
+
+## AI Usage
+I used AI (Augment) to generate util functions to help validate/parse objects needed in this project.
+Augment also helped in creating tests as well as debugging code.

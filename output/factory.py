@@ -14,7 +14,6 @@ from utils.errors import ConfigError
 
 
 def build_output(config: AppConfig) -> Output:
-    """Build a single fan-out Output from the configured sinks."""
     return MultiOutput(tuple(_build_one(item, config) for item in config.outputs))
 
 
